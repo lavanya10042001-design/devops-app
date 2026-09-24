@@ -28,14 +28,14 @@ pipeline {
         }
         */
         stage('Deploy') {
-             steps {
+            steps {
                 sshagent(['ec2-ssh-key']) {
-                     bat '''
-                    scp -o StrictHostKeyChecking=no target\\devops-app-0.0.1-SNAPSHOT.jar.jar ec2-user@3.110.164.176:/home/ec2-user/app/
+                    powershell '''
+                    scp -o StrictHostKeyChecking=no "target\\devops-app-0.0.1-SNAPSHOT.jar" "ec2-user@3.110.164.176:/home/ec2-user/app/"
 
-                     ssh -o StrictHostKeyChecking=no ec2-user@3.110.164.176 "PID=$(pgrep -f '/home/ec2-user/app/devops-app-0.0.1-SNAPSHOT.jar' | head -n 1); if [ -n \\"$PID\\" ]; then kill $PID; fi; nohup java -jar /home/ec2-user/app/devops-app-0.0.1-SNAPSHOT.jar > /home/ec2-user/app/app.log 2>&1 &"
+                    ssh -o StrictHostKeyChecking=no "ec2-user@3.110.164.176" "nohup java -jar /home/ec2-user/app/devops-app-0.0.1-SNAPSHOT.jar > /home/ec2-user/app/app.log 2>&1 &"
                     '''
-                 }
+                }
             }
         }
     }
