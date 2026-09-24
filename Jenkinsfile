@@ -12,5 +12,10 @@ pipeline {
                 bat 'mvn test'
             }
         }
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
     }
 }
